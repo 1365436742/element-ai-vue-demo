@@ -6,14 +6,16 @@
     <ElASender
       class="sender"
       v-model="content"
+      ref="senderRef"
       placeholder="请输入聊天内容"
       variant="updown"
       @focus="focusClass = true"
       @blur="focusClass = false"
       @paste-file="uploadInfo.handleFileUpload"
+      @send="onSend"
     >
       <template #action-list>
-        <ElSelect v-model="value" placeholder="模型选择" style="width: 160px">
+        <ElSelect v-model="selectValue" placeholder="模型选择" style="width: 160px">
           <ElOption
             v-for="item in options"
             :key="item.value"
@@ -43,29 +45,37 @@ import { useUploadFileStore } from '@/stores/uploadFile'
 import { ElASender, ElAFilesUpload, ElAFilesCard } from 'element-ai-vue'
 import { ElSelect, ElOption, ElButton } from 'element-plus'
 import { Microphone, Paperclip } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 
-const value = ref('')
+const emits = defineEmits(['send'])
 
 const options = [
   {
-    value: 'Option1',
-    label: 'Option1',
+    value: 'Gpt-3.5-turbo',
+    label: 'Gpt-3.5-turbo',
   },
   {
-    value: 'Option2',
-    label: 'Option2',
+    value: 'Gemini 3 Pro',
+    label: 'Gemini 3 Pro',
   },
   {
-    value: 'Option3',
-    label: 'Option3',
+    value: 'Claude Opus 4.5',
+    label: 'Claude Opus 4.5',
   },
 ]
-
-const content = ref(``)
+const senderRef = useTemplateRef('senderRef')
+const selectValue = ref('Gpt-3.5-turbo')
+const content = ref('')
 const focusClass = ref(false)
 
 const uploadInfo = useUploadFileStore()
+
+const onSend = () => {
+  const sendContent = senderRef.value?.editor()?.getText()
+  emits('send', sendContent || '')
+  content.value = ''
+  uploadInfo.fileList = []
+}
 </script>
 
 <style scoped lang="scss">
