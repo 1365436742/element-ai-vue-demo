@@ -17,7 +17,7 @@
           root-margin="-100px"
           text-align="center"
         />
-        <ChatInput @send="onSend"></ChatInput>
+        <ChatInput :loading @send="onSend"></ChatInput>
       </div>
     </div>
   </div>
@@ -40,6 +40,7 @@ async function handleSend(input: string) {
     placement: 'start',
     isMarkdown: true,
     typing: true,
+    typingOver: false,
     variant: 'borderless',
     loading: true,
     thinkingContent: '',
@@ -49,26 +50,32 @@ async function handleSend(input: string) {
 
   for await (const chunk of stream) {
     currentMessage.loading = false
+    if (chunk.done) {
+      continue
+    }
     if (chunk.type === 'thinking') {
-      const { stepIndex, kind } = chunk.meta
+      if (currentMessage.thinkExpanded === undefined) {
+        currentMessage.thinkExpanded = true
+      }
 
+      const { stepIndex, key, title, icon } = chunk.meta
       // 确保数组长度足够，防止跳跃索引（虽然 mock 不会跳跃）
       if (!currentMessage.thinkingSteps[stepIndex]) {
-        currentMessage.thinkingSteps[stepIndex] = { type: kind, content: '' }
+        currentMessage.thinkingSteps[stepIndex] = {
+          key,
+          title,
+          description: '',
+          icon,
+        }
       }
-
       // 累加内容
-      if (kind === 'text') {
-        currentMessage.thinkingSteps[stepIndex].content += chunk.content
-      } else {
-        // 图片通常是一次性给出的 URL
-        currentMessage.thinkingSteps[stepIndex].content = chunk.content
-      }
+      currentMessage.thinkingSteps[stepIndex].description += chunk.content
     } else if (chunk.type === 'text') {
       // 正文内容（包含 Markdown, 代码块, 流程图, 公式）
       currentMessage.content += chunk.content
     }
   }
+  currentMessage.typingOver = true
   loading.value = false
 }
 
@@ -98,7 +105,7 @@ const onSend = (content: string) => {
     .center-content {
       width: 100%;
       margin-top: -60px;
-      &haveMessage {
+      &.haveMessage {
         margin-top: 0;
       }
       .title-text {

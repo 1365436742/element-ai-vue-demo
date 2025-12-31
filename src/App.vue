@@ -23,6 +23,7 @@ const config = useConfigStore()
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 html,
 body,
@@ -33,5 +34,9 @@ body,
 .el-main {
   width: 100%;
   height: 100%;
+}
+.el-ai-drag-upload.upload-area {
+  flex: 1;
+  height: 0;
 }
 </style>

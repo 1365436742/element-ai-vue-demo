@@ -4,17 +4,37 @@
 
 // 模拟的语料库
 const THINKING_STEPS = [
-  { type: 'text', content: '正在分析用户意图...' },
-  { type: 'text', content: '检索知识库中相关内容...' },
-  { type: 'text', content: '识别到复杂逻辑，正在构建思维链...' },
-  { type: 'text', content: '尝试从多角度验证问题的可行性...' },
-  { type: 'text', content: '正在回顾历史对话上下文...' },
-  { type: 'text', content: '检测到潜在的代码需求，准备生成示例...' },
-  { type: 'text', content: '正在计算数学模型的参数...' },
-  { type: 'text', content: '逻辑自洽性检查中...' },
-  { type: 'image', content: 'https://placehold.co/300x200/png?text=Thinking+Process+Map' },
-  { type: 'image', content: 'https://placehold.co/400x200/png?text=Data+Flow+Analysis' },
-  { type: 'image', content: 'https://placehold.co/350x150/png?text=Architecture+Sketch' },
+  {
+    key: 1,
+    title: '第一步：理解需求',
+    description:
+      '分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。分析用户需求，明确目标和功能。',
+    icon: `/assets/book-icon.png`,
+  },
+  {
+    key: 2,
+    title: '第二步：设计架构',
+    description: '制定系统架构，选择技术栈和工具。',
+    icon: `/assets/book-icon.png`,
+  },
+  {
+    key: 3,
+    title: '第三步：编写代码',
+    description: '根据设计文档编写高质量代码，遵循编码规范。',
+    icon: `/assets/book-icon.png`,
+  },
+  {
+    key: 4,
+    title: '第四步：测试验证',
+    description: '编写单元测试和集成测试，确保功能正确性。',
+    icon: `/assets/book-icon.png`,
+  },
+  {
+    key: 5,
+    title: '第五步：部署上线',
+    description: '配置生产环境，执行部署脚本，监控系统运行状态。',
+    icon: `/assets/book-icon.png`,
+  },
 ]
 
 const TEXT_TEMPLATES = [
@@ -144,29 +164,22 @@ export async function* mockChatStream(
   // 1. 模拟思考过程 (Thinking)
   // 80% 概率出现思考过程
   if (rng.bool(0.8)) {
-    const stepsCount = rng.nextInt(2, 5)
-    for (let i = 0; i < stepsCount; i++) {
-      const step = rng.pick(THINKING_STEPS)
+    for (let i = 0; i < THINKING_STEPS.length; i++) {
+      const step = THINKING_STEPS[i]
 
-      if (step.type === 'text') {
-        // 模拟打字机效果
-        for (const char of step.content) {
-          yield { type: 'thinking', content: char, meta: { kind: 'text', stepIndex: i } }
-          await delay(rng.nextInt(10, 50))
+      // 模拟打字机效果
+      for (const char of step!.description) {
+        yield {
+          type: 'thinking',
+          content: char,
+          meta: {
+            stepIndex: i,
+            key: step!.key,
+            title: step!.title,
+            icon: step!.icon,
+          },
         }
-        // 偶尔插入一些数学公式作为思考的一部分
-        if (rng.bool(0.3)) {
-          const formula = rng.pick(MATH_FORMULAS)
-          const formulaText = `\n考虑到公式：${formula}\n`
-          for (const char of formulaText) {
-            yield { type: 'thinking', content: char, meta: { kind: 'text', stepIndex: i } }
-            await delay(20)
-          }
-        }
-      } else if (step.type === 'image') {
-        // 图片直接返回
-        yield { type: 'thinking', content: step.content, meta: { kind: 'image', stepIndex: i } }
-        await delay(500) // 模拟图片加载思考时间
+        await delay(rng.nextInt(10, 50))
       }
     }
     yield { type: 'thinking', content: '', done: true }
