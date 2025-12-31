@@ -9,6 +9,7 @@
       ref="senderRef"
       placeholder="请输入聊天内容"
       variant="updown"
+      :loading
       @focus="focusClass = true"
       @blur="focusClass = false"
       @paste-file="uploadInfo.handleFileUpload"
@@ -47,6 +48,12 @@ import { ElSelect, ElOption, ElButton } from 'element-plus'
 import { Microphone, Paperclip } from '@element-plus/icons-vue'
 import { ref, useTemplateRef } from 'vue'
 
+defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+})
 const emits = defineEmits(['send'])
 
 const options = [
