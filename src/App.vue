@@ -31,6 +31,9 @@ body,
 .el-container {
   height: 100%;
 }
+body {
+  overflow: hidden;
+}
 .el-main {
   width: 100%;
   height: 100%;

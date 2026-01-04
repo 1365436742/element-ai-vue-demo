@@ -84,10 +84,13 @@ const count = ref(0);
 ]
 
 const MATH_FORMULAS = [
-  '$$E = mc^2$$',
-  '$$e^{i\\pi} + 1 = 0$$',
+  // '$$E = mc^2$$',
+  // '$$e^{i\\pi} + 1 = 0$$',
   '$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$',
-  '$$F(\\omega) = \\int_{-\\infty}^{\\infty} f(t)e^{-i\\omega t} dt$$',
+  '$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$',
+  '$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$',
+  '$$\\int_{-\\infty}^{\\infty} e^{-x^2} dx = \\sqrt{\\pi}$$',
+  // '$$F(\\omega) = \\int_{-\\infty}^{\\infty} f(t)e^{-i\\omega t} dt$$',
 ]
 
 const MERMAID_CHARTS = [
@@ -163,27 +166,27 @@ export async function* mockChatStream(
 
   // 1. 模拟思考过程 (Thinking)
   // 80% 概率出现思考过程
-  if (rng.bool(0.8)) {
-    for (let i = 0; i < THINKING_STEPS.length; i++) {
-      const step = THINKING_STEPS[i]
+  // if (rng.bool(0.8)) {
+  //   for (let i = 0; i < THINKING_STEPS.length; i++) {
+  //     const step = THINKING_STEPS[i]
 
-      // 模拟打字机效果
-      for (const char of step!.description) {
-        yield {
-          type: 'thinking',
-          content: char,
-          meta: {
-            stepIndex: i,
-            key: step!.key,
-            title: step!.title,
-            icon: step!.icon,
-          },
-        }
-        await delay(rng.nextInt(10, 50))
-      }
-    }
-    yield { type: 'thinking', content: '', done: true }
-  }
+  //     // 模拟打字机效果
+  //     for (const char of step!.description) {
+  //       yield {
+  //         type: 'thinking',
+  //         content: char,
+  //         meta: {
+  //           stepIndex: i,
+  //           key: step!.key,
+  //           title: step!.title,
+  //           icon: step!.icon,
+  //         },
+  //       }
+  //       await delay(rng.nextInt(10, 50))
+  //     }
+  //   }
+  //   yield { type: 'thinking', content: '', done: true }
+  // }
 
   // 2. 模拟正文生成 (Text + Code + Chart + Math)
   const paragraphs = rng.nextInt(2, 5)
@@ -209,7 +212,7 @@ export async function* mockChatStream(
     }
 
     // 随机插入流程图
-    if (rng.bool(0.2)) {
+    if (rng.bool(0.9)) {
       const chart = rng.pick(MERMAID_CHARTS)
       const chartBlock = `\`\`\`mermaid\n${chart}\n\`\`\`\n\n`
       for (const char of chartBlock) {
@@ -219,7 +222,7 @@ export async function* mockChatStream(
     }
 
     // 随机插入数学公式
-    if (rng.bool(0.3)) {
+    if (rng.bool(0.9)) {
       const formula = rng.pick(MATH_FORMULAS)
       const formulaText = `根据 ${formula} 可知...\n\n`
       for (const char of formulaText) {
