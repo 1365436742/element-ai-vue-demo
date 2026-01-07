@@ -1,6 +1,9 @@
 <template>
   <ElHeader class="header">
-    <div class="title">element-ai-vue 聊天</div>
+    <div class="title">
+      <img src="https://element-ai-vue.com/logo.svg" alt="" />
+      element-ai-vue 聊天室
+    </div>
     <ElSwitch
       v-model="config.isDark"
       inline-prompt
@@ -19,11 +22,21 @@ import { useConfigStore } from '@/stores/config'
 const config = useConfigStore()
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--el-border-color);
+  .title {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    img {
+      height: 32px;
+      margin-right: 8px;
+    }
+  }
 }
 </style>

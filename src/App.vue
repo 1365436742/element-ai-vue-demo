@@ -25,6 +25,9 @@ const config = useConfigStore()
   padding: 0;
   box-sizing: border-box;
 }
+html.dark .el-ai-markdown .el-ai-code-mermaid {
+  background-color: #2d2d2d !important;
+}
 html,
 body,
 #app,
