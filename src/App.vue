@@ -1,48 +1,31 @@
 <template>
   <ElAConfigProvider :theme="config.theme">
-    <ElContainer direction="vertical">
-      <Header></Header>
-      <ElADragUpload class="upload-area">
-        <ElMain>
-          <router-view></router-view>
-        </ElMain>
-      </ElADragUpload>
-    </ElContainer>
+    <div class="app-shell">
+      <Sidebar />
+      <div class="workspace" :inert="config.sidebarOpen">
+        <Header />
+        <ElADragUpload
+          v-model="upload.fileList"
+          v-bind="upload.commonProps"
+          class="upload-area"
+          :disabled="chat.loading"
+        >
+          <main id="main-content"><router-view /></main>
+        </ElADragUpload>
+      </div>
+    </div>
   </ElAConfigProvider>
 </template>
 
 <script setup lang="ts">
 import { ElAConfigProvider, ElADragUpload } from 'element-ai-vue'
-import { ElContainer, ElMain } from 'element-plus'
 import Header from './components/Header.vue'
+import Sidebar from './components/Sidebar.vue'
 import { useConfigStore } from './stores/config'
-
+import { useUploadFileStore } from './stores/uploadFile'
+import { useChatStore } from './stores/chat'
+import './styles.css'
 const config = useConfigStore()
+const upload = useUploadFileStore()
+const chat = useChatStore()
 </script>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-html.dark .el-ai-markdown .el-ai-code-mermaid {
-  background-color: #2d2d2d !important;
-}
-html,
-body,
-#app,
-.el-container {
-  height: 100%;
-}
-body {
-  overflow: hidden;
-}
-.el-main {
-  width: 100%;
-  height: 100%;
-}
-.el-ai-drag-upload.upload-area {
-  flex: 1;
-  height: 0;
-}
-</style>

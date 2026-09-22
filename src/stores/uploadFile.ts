@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { defineStore } from 'pinia'
 import { useFileOperation } from 'element-ai-vue'
 import type { FilesUploadErrorParams, FilesUploadItem } from 'element-ai-vue'
@@ -16,8 +17,8 @@ export const useUploadFileStore = defineStore('uploadFile', () => {
       }
     }, 500)
   }
-  const onErrorMessage = ({ message, type }: FilesUploadErrorParams) => {
-    alert(type + ' ' + message)
+  const onErrorMessage = ({ message }: FilesUploadErrorParams) => {
+    ElMessage.warning(message)
   }
   const onUpload = async (fileUploadItems: FilesUploadItem[]) => {
     for (let i = 0; i < fileUploadItems.length; i++) {
@@ -35,7 +36,7 @@ export const useUploadFileStore = defineStore('uploadFile', () => {
     }
   }
   const commonProps = {
-    fileSizeLimit: 1, // 10MB
+    fileSizeLimit: 10, // MB
     maxFileLength: 5,
     accept: ['.pdf', '.docx', '.doc', '.png', '.jpg'],
     onUpload,
